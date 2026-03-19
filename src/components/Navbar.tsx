@@ -21,6 +21,7 @@ const Navbar = () => {
             <div className="hidden md:flex items-center gap-8">
               <Link to="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Home</Link>
               <Link to="/packages" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Packages</Link>
+              <Link to="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">About</Link>
               <Link to="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Dashboard</Link>
             </div>
             <div className="hidden md:flex items-center gap-3">
@@ -42,6 +43,7 @@ const Navbar = () => {
         <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-3">
           <Link to="/" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Home</Link>
           <Link to="/packages" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Packages</Link>
+          <Link to="/about" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>About</Link>
           <Link to="/dashboard" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Dashboard</Link>
           <div className="flex gap-3 pt-2">
             <Button variant="ghost" asChild className="flex-1">

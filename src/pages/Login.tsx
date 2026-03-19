@@ -5,23 +5,32 @@ import { Label } from "@/components/ui/label";
 import { Sprout } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Connect to auth backend
-    toast({ title: "Welcome back!", description: "Redirecting to dashboard..." });
-    navigate("/dashboard");
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      toast({ title: "Login failed", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Welcome back!", description: "Redirecting to dashboard..." });
+      navigate("/dashboard");
+    }
+    setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Left panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-primary items-center justify-center p-12">
         <div className="max-w-md text-center">
           <Sprout className="h-16 w-16 text-primary-foreground mx-auto mb-8" />
@@ -34,7 +43,6 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Right panel */}
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           <Link to="/" className="flex items-center gap-2 mb-10 lg:hidden">
@@ -48,36 +56,20 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+              <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
-            <Button type="submit" className="w-full" size="lg">
-              Log in
+            <Button type="submit" className="w-full" size="lg" disabled={loading}>
+              {loading ? "Logging in..." : "Log in"}
             </Button>
           </form>
 
           <p className="text-center text-muted-foreground mt-6 text-sm">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-primary font-medium hover:underline">
-              Sign up
-            </Link>
+            <Link to="/signup" className="text-primary font-medium hover:underline">Sign up</Link>
           </p>
         </div>
       </div>
